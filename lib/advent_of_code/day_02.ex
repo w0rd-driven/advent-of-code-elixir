@@ -1,11 +1,12 @@
 defmodule AdventOfCode.Day02 do
   def part1(input) do
     # input |> IO.inspect(label: "Input")
-
-    count = 0
-    for rule <- input do
-      count + rule_count(rule)
+    count = for rule <- input do
+      rule_count(rule)
     end
+
+    _result = count |> Enum.sum
+    # result |> IO.inspect(label: "Count")
   end
 
   def part2(_input) do
@@ -18,7 +19,7 @@ defmodule AdventOfCode.Day02 do
                 #  |> (fn [key, value] -> {{:policy, key}, {:password, value}} end).()
                  |> (fn [key, value] -> [{:policy, key}, {:password, value}] end).()
     result = policy_parse(parts)
-    result |> IO.inspect(label: "Result")
+    # result |> IO.inspect(label: "Result")
     result
   end
 
@@ -35,18 +36,18 @@ defmodule AdventOfCode.Day02 do
                         |> (fn [key, value] -> [{:min, key}, {:max, value}] end).()
     # range_parts |> IO.inspect(label: "Range Parts")
     min = range_parts |> Keyword.get(:min)
-    min |> IO.inspect(label: "Policy Range Min")
+    # min |> IO.inspect(label: "Policy Range Min")
     max = range_parts |> Keyword.get(:max)
-    max |> IO.inspect(label: "Policy Range Max")
+    # max |> IO.inspect(label: "Policy Range Max")
     letter = policy_parts |> Keyword.get(:letter)
-    letter |> IO.inspect(label: "Policy Letter")
+    # letter |> IO.inspect(label: "Policy Letter")
 
     password = parts |> Keyword.get(:password)
     # password |> IO.inspect(label: "Password")
     characters = character_count(password)
-    characters |> IO.inspect(label: "Password characters")
+    # characters |> IO.inspect(label: "Password characters")
     letter_count = characters |> Map.get(letter, 0) # default to 0 instead of nil
-    letter_count |> IO.inspect(label: "Password count")
+    # letter_count |> IO.inspect(label: "Password count")
 
     # If the count falls within parameters, return a 1 to increment or 0 stay put
     cond do
@@ -61,9 +62,6 @@ defmodule AdventOfCode.Day02 do
 
   defp character_count(password) do
     password
-      # |> Map.new( &{<<&1 :: utf8>>,
-      #    Enum.count(password, fn x -> &1 == x end)}
-      # )
       |> String.graphemes()
       |> Enum.reduce(%{}, fn char, acc ->
            case acc do
