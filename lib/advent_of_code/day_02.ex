@@ -6,7 +6,8 @@ defmodule AdventOfCode.Day02 do
     end
 
     _result = count |> Enum.sum
-    # result |> IO.inspect(label: "Count")
+    # count |> IO.inspect(label: "Counts")
+    # result |> IO.inspect(label: "Result")
   end
 
   def part2(_input) do
@@ -15,8 +16,6 @@ defmodule AdventOfCode.Day02 do
   defp rule_count(rule) do
     # rule |> IO.inspect(label: "Rule")
     parts = rule |> String.split(": ")
-                #  |> (fn [key, value] -> {key, value} end).()
-                #  |> (fn [key, value] -> {{:policy, key}, {:password, value}} end).()
                  |> (fn [key, value] -> [{:policy, key}, {:password, value}] end).()
     result = policy_parse(parts)
     # result |> IO.inspect(label: "Result")
@@ -47,16 +46,13 @@ defmodule AdventOfCode.Day02 do
     characters = character_count(password)
     # characters |> IO.inspect(label: "Password characters")
     letter_count = characters |> Map.get(letter, 0) # default to 0 instead of nil
-    # letter_count |> IO.inspect(label: "Password count")
+    # letter_count |> IO.inspect(label: "Letter count")
 
     # If the count falls within parameters, return a 1 to increment or 0 stay put
-    cond do
-      letter_count == 0 or letter_count == nil ->
-        0
-      letter_count >= min or letter_count <= max ->
-        1
-      true ->
-        0
+    if letter_count in String.to_integer(min)..String.to_integer(max) do
+      1
+    else
+      0
     end
   end
 
