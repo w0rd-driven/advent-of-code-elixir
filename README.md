@@ -69,7 +69,7 @@ defmodule Mix.Tasks.D01.P1 do
         |> part1()
         |> IO.inspect(label: "Part 1 Results")
   end
-end   
+end
 ```
 
 ## Installation
