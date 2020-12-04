@@ -50,12 +50,97 @@ defmodule AdventOfCode.Day04 do
     passports_checked = for passport <- input do
       {passport |> is_passport_valid(), passport |> passport_validate()}
     end
-    passports_checked |> IO.inspect(label: "Passports Checked")
+    # passports_checked |> IO.inspect(label: "Passports Checked")
     # passports_checked |> Enum.count(fn x -> Enum.empty?(x) end)
   end
 
   defp passport_validate(passport) do
-    passport |> IO.inspect(label: "Passport")
+    # passport |> IO.inspect(label: "Passport")
+    fields = passport |> get_values()
+    # fields |> IO.inspect(label: "Fields")
+    count = for field <- fields do
+      field |> IO.inspect(label: "Field")
+      case field.key do
+        "byr" ->
+          field.value >= "1920" or field.value <= "2002"
+        "iyr" ->
+          field.value >= "2010" or field.value <= "2020"
+        "eyr" ->
+          field.value >= "2020" or field.value <= "2030"
+        "hgt" ->
+          field.value |> height_valid()
+        "hcl" ->
+          field.value |> hair_color_valid()
+        "ecl" ->
+          field.value in ["amb", "blu", "brn", "gry", "grn", "hzl", "oth"]
+        "pid" ->
+          field.value |> id_valid()
+        "cid" ->
+          true
+      end
+    end
+
+    count
+  end
+
+  defp get_values(passport) do
+    # passport |> IO.inspect(label: "Passport")
+    fields = passport |> String.split(" ")
+    map = for field <- fields do
+      # field |> IO.inspect(label: "Field")
+      [key, value] = field |> String.split(":") # Oh snaps I'm learning
+      Map.new(%{:key => key, :value => value})
+    end
+    map
+  end
+
+  defp height_valid(value) do
+    [height, unit] = value |> String.split(~r{cm|in}, include_captures: true, parts: 2, trim: true)
+    # height |> IO.inspect(label: "Height")
+    # unit |> IO.inspect(label: "Unit")
+    check = case unit do
+      "cm" ->
+        height >= 150 or height <= 193
+      "in" ->
+        height >= 59 or height <= 76
+      _ ->
+        false
+    end
+    # check |> IO.inspect(label: "Check")
+  end
+
+  defp hair_color_valid(value) do
+    value
+  end
+
+  defp id_valid(value) do
+    value
+  end
+
+  defp get_present_fields(passport) do
+    # passport |> IO.inspect(label: "Passport")
+    valid_keys = [
+      "byr",
+      "iyr",
+      "eyr",
+      "hgt",
+      "hcl",
+      "ecl",
+      "pid",
+      "cid",
+    ]
+    fields = passport |> String.split(" ")
+    keys = for field <- fields do
+      # field |> IO.inspect(label: "Field")
+      [key, _value] = field |> String.split(":") # Oh snaps I'm learning
+      # key |> IO.inspect(label: "Key")
+      key
+    end
+    # keys |> IO.inspect(label: "Keys")
+    # We convert the 2 lists to a mapset to get the difference. If cid is present, we ignore by deleting.
+    check = MapSet.intersection(MapSet.new(valid_keys), MapSet.new(keys))
+    # check |> IO.inspect(label: "Check")
+    check
   end
 
 end
