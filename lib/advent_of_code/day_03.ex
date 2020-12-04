@@ -48,6 +48,49 @@ defmodule AdventOfCode.Day03 do
     count |> Enum.count()
   end
 
-  def part2(_input) do
+  def part2(input) do
+    slopes = [
+      {1, 1},
+      {3, 1},
+      {5, 1},
+      {7, 1},
+      {1, 2},
+    ]
+    map = input |> build_map2
+    count = Enum.reduce(slopes, 1, fn slope, acc ->
+      acc * count_trees(map, slope)
+    end)
+    count
   end
+
+  @spec build_map2(list | %{length: any}) :: any
+  defp build_map2(input) do
+    # input |> IO.inspect(label: "Input")
+    height = input |> Enum.count()
+    # height |> IO.inspect(label: "Map Height")
+    width = input |> List.first() |> String.length()
+    # width |> IO.inspect(label: "Map Width")
+    required = Kernel.ceil((height * 7) / width) # Our slope is 3 across, 1 down
+    # required |> IO.inspect(label: "Map Required Sections")
+    map = input |> Enum.map(fn (row) ->
+      row |> String.duplicate(required)
+    end)
+    map
+  end
+
+  def count_trees(input, {step_x, step_y}) do
+    {_, trees} =
+      Enum.take_every(input, step_y)
+      |> Enum.map(&String.to_charlist/1)
+      |> Enum.reduce({0, 0}, fn row, {x, trees} ->
+        trees =
+          case Stream.cycle(row) |> Enum.at(x) do
+            ?# -> trees + 1
+            ?. -> trees
+          end
+        {x + step_x, trees}
+      end)
+    trees
+  end
+
 end
