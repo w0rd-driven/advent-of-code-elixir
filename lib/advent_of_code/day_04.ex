@@ -6,7 +6,15 @@ defmodule AdventOfCode.Day04 do
   end
 
   defp parse_passports(input) do
-    input |> IO.inspect(label: "Passports")
+    count = for passport <- input do
+      passport |> is_passport_valid()
+    end
+    count |> Enum.count()
+  end
+
+  defp is_passport_valid(passport) do
+    passport |> IO.inspect(label: "Passport")
+    true
   end
 
   def part2(_input) do
