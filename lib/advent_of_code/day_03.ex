@@ -1,6 +1,6 @@
 defmodule AdventOfCode.Day03 do
 
-  @spec part1(list | %{length: any}) :: any
+  @spec part1(list | %{length: any}) :: non_neg_integer
   def part1(input) do
     map = input |> build_map
     count = map |> traverse_map(3, 1)
