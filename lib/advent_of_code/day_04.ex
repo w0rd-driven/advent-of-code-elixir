@@ -1,11 +1,12 @@
 defmodule AdventOfCode.Day04 do
 
   def part1(input) do
-    passports = input |> parse_passports
+    _passports = input |> parse_passports
     # passports |> IO.inspect(label: "Passports")
   end
 
   defp parse_passports(input) do
+    # input |> Enum.count |> IO.inspect(label: "Total")
     passports_checked = for passport <- input do
       passport |> is_passport_valid()
     end
@@ -23,17 +24,21 @@ defmodule AdventOfCode.Day04 do
       "hcl",
       "ecl",
       "pid",
-      # "cid", # We don't care to include this based on the puzzle gotcha
+      "cid",
     ]
-    fields = passport |> String.replace("\n", " ") |> String.split(" ") # Single new lines need to be converted to spaces
-    check = for field <- fields do
+    fields = passport |> String.split(" ")
+    keys = for field <- fields do
       # field |> IO.inspect(label: "Field")
       [key, _value] = field |> String.split(":") # Oh snaps I'm learning
       # key |> IO.inspect(label: "Key")
-      # value |> IO.inspect(label: "Value")
-      key in valid_keys
+      key
     end
-    check |> Enum.all?()
+    # keys |> IO.inspect(label: "Keys")
+    # check = valid_keys |> Enum.all?(fn x -> x in keys end)
+    # We convert the 2 lists to a mapset to get the difference. If cid is present, we ignore by deleting.
+    check = MapSet.difference(MapSet.new(valid_keys), MapSet.new(keys)) |> Enum.filter(fn key -> key != "cid" end)
+    check |> IO.inspect(label: "Check")
+    # check |> Enum.all?()
   end
 
   def part2(_input) do

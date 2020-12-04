@@ -27,7 +27,7 @@ defmodule Mix.Tasks.D04.P1 do
           |> Enum.reverse()
       {Enum.reverse(lines),last_line}
     end)
-    |> Stream.map(&String.trim_trailing/1)
+    |> Stream.map(&(String.replace(&1, "\n", " ")))
     |> Enum.to_list()
   end
 end
