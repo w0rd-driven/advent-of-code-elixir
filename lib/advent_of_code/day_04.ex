@@ -40,6 +40,22 @@ defmodule AdventOfCode.Day04 do
     check
   end
 
-  def part2(_input) do
+  def part2(input) do
+    _passports = input |> parse_passports2
+    # passports |> IO.inspect(label: "Passports")
   end
+
+  defp parse_passports2(input) do
+    # input |> Enum.count |> IO.inspect(label: "Total")
+    passports_checked = for passport <- input do
+      {passport |> is_passport_valid(), passport |> passport_validate()}
+    end
+    passports_checked |> IO.inspect(label: "Passports Checked")
+    # passports_checked |> Enum.count(fn x -> Enum.empty?(x) end)
+  end
+
+  defp passport_validate(passport) do
+    passport |> IO.inspect(label: "Passport")
+  end
+
 end
