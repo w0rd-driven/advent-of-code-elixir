@@ -10,9 +10,17 @@ defmodule AdventOfCode.Day04Test do
   end
 
   def get_input do
+    # See https://elixirforum.com/t/streaming-lines-from-an-enum-of-chunks/21244 for chunking work up
     "../../lib/data/day_04_test.txt" # Eww but I don't care right now
     |> Path.expand(__DIR__)
-    |> File.stream!()
+    |> File.stream!([], 2048) # chunks instead of lines
+    |> Stream.transform("", fn chunk, acc ->
+      [last_line | lines] =
+          acc <> chunk
+          |> String.split("\n\n")
+          |> Enum.reverse()
+      {Enum.reverse(lines),last_line}
+    end)
     |> Stream.map(&String.trim_trailing/1)
     |> Enum.to_list()
   end
