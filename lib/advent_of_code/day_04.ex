@@ -11,7 +11,7 @@ defmodule AdventOfCode.Day04 do
       passport |> is_passport_valid()
     end
     # passports_checked |> IO.inspect(label: "Passports Checked")
-    passports_checked |> Enum.count(fn x -> x == true end)
+    passports_checked |> Enum.count(fn x -> Enum.empty?(x) end)
   end
 
   defp is_passport_valid(passport) do
@@ -34,11 +34,10 @@ defmodule AdventOfCode.Day04 do
       key
     end
     # keys |> IO.inspect(label: "Keys")
-    # check = valid_keys |> Enum.all?(fn x -> x in keys end)
     # We convert the 2 lists to a mapset to get the difference. If cid is present, we ignore by deleting.
     check = MapSet.difference(MapSet.new(valid_keys), MapSet.new(keys)) |> Enum.filter(fn key -> key != "cid" end)
-    check |> IO.inspect(label: "Check")
-    # check |> Enum.all?()
+    # check |> IO.inspect(label: "Check")
+    check
   end
 
   def part2(_input) do
