@@ -71,11 +71,14 @@ defmodule AdventOfCode.Day04 do
       # field |> IO.inspect(label: "Field")
       case field.key do
         "byr" ->
-          field.value >= "1920" or field.value <= "2002"
+          year = field.value |> String.to_integer()
+          year in 1920..2002
         "iyr" ->
-          field.value >= "2010" or field.value <= "2020"
+          year = field.value |> String.to_integer()
+          year in 2010..2020
         "eyr" ->
-          field.value >= "2020" or field.value <= "2030"
+          year = field.value |> String.to_integer()
+          year in 2020..2030
         "hgt" ->
           field.value |> height_valid()
         "hcl" ->
@@ -104,14 +107,16 @@ defmodule AdventOfCode.Day04 do
   end
 
   defp height_valid(value) do
-    [height, unit] = value |> String.split(~r{cm|in}, include_captures: true, parts: 2, trim: true)
+    values = value |> String.split(~r/(cm|in)$/, include_captures: true, parts: 2, trim: true)
+    height = List.first(values) |> String.to_integer()
+    unit = List.last(values)
     # height |> IO.inspect(label: "Height")
     # unit |> IO.inspect(label: "Unit")
     check = case unit do
       "cm" ->
-        height >= 150 or height <= 193
+        height in 150..193
       "in" ->
-        height >= 59 or height <= 76
+        height in 59..76
       _ ->
         false
     end
@@ -121,10 +126,10 @@ defmodule AdventOfCode.Day04 do
   end
 
   defp hair_color_valid(value) do
-    value |> String.match?(~r/^#([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$/)
+    value |> String.match?(~r/^\#[0-9a-f]{6}$/)
   end
 
   defp id_valid(value) do
-    value |> String.match?(~r/^[\d]{9}$/)
+    value |> String.match?(~r/^\d{9}$/)
   end
 end
