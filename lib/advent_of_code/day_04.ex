@@ -8,13 +8,13 @@ defmodule AdventOfCode.Day04 do
   defp parse_passports(input) do
     # input |> Enum.count |> IO.inspect(label: "Total")
     passports_checked = for passport <- input do
-      passport |> is_passport_valid()
+      passport |> has_required_fields()
     end
     # passports_checked |> IO.inspect(label: "Passports Checked")
     passports_checked |> Enum.count(fn x -> Enum.empty?(x) end)
   end
 
-  defp is_passport_valid(passport) do
+  defp has_required_fields(passport) do
     # passport |> IO.inspect(label: "Passport")
     valid_keys = [
       "byr",
@@ -48,10 +48,19 @@ defmodule AdventOfCode.Day04 do
   defp parse_passports2(input) do
     # input |> Enum.count |> IO.inspect(label: "Total")
     passports_checked = for passport <- input do
-      {passport |> is_passport_valid(), passport |> passport_validate()}
+      required_fields = passport |> has_required_fields() |> Enum.empty?()
+      # required_fields |> IO.inspect(label: "Required Fields")
+      valid_fields = passport |> passport_validate() |> Enum.all?(fn x -> x == true end)
+      # valid_fields |> IO.inspect(label: "Valid Fields")
+
+      if required_fields == true and required_fields == valid_fields do
+        true
+      else
+        false
+      end
     end
     # passports_checked |> IO.inspect(label: "Passports Checked")
-    # passports_checked |> Enum.count(fn x -> Enum.empty?(x) end)
+    passports_checked |> Enum.count(fn x -> x == true end)
   end
 
   defp passport_validate(passport) do
@@ -59,7 +68,7 @@ defmodule AdventOfCode.Day04 do
     fields = passport |> get_values()
     # fields |> IO.inspect(label: "Fields")
     count = for field <- fields do
-      field |> IO.inspect(label: "Field")
+      # field |> IO.inspect(label: "Field")
       case field.key do
         "byr" ->
           field.value >= "1920" or field.value <= "2002"
@@ -107,40 +116,15 @@ defmodule AdventOfCode.Day04 do
         false
     end
     # check |> IO.inspect(label: "Check")
-  end
 
-  defp hair_color_valid(value) do
-    value
-  end
-
-  defp id_valid(value) do
-    value
-  end
-
-  defp get_present_fields(passport) do
-    # passport |> IO.inspect(label: "Passport")
-    valid_keys = [
-      "byr",
-      "iyr",
-      "eyr",
-      "hgt",
-      "hcl",
-      "ecl",
-      "pid",
-      "cid",
-    ]
-    fields = passport |> String.split(" ")
-    keys = for field <- fields do
-      # field |> IO.inspect(label: "Field")
-      [key, _value] = field |> String.split(":") # Oh snaps I'm learning
-      # key |> IO.inspect(label: "Key")
-      key
-    end
-    # keys |> IO.inspect(label: "Keys")
-    # We convert the 2 lists to a mapset to get the difference. If cid is present, we ignore by deleting.
-    check = MapSet.intersection(MapSet.new(valid_keys), MapSet.new(keys))
-    # check |> IO.inspect(label: "Check")
     check
   end
 
+  defp hair_color_valid(value) do
+    value |> String.match?(~r/^#([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$/)
+  end
+
+  defp id_valid(value) do
+    value |> String.match?(~r/^[\d]{9}$/)
+  end
 end
