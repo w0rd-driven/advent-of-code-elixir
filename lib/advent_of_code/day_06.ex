@@ -1,7 +1,13 @@
 defmodule AdventOfCode.Day06 do
-  def part1(args) do
+  def part1(input) do
+    answers = input |> parse_answers
+
   end
 
-  def part2(args) do
+  defp parse_answers(answers) do
+    answers |> IO.inspect(label: "Answers")
+  end
+
+  def part2(_input) do
   end
 end
