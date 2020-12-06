@@ -1,19 +1,19 @@
 defmodule AdventOfCode.Day05 do
   def part1(input) do
-    _seats = input |> parse_seats
+    seats = input |> parse_seats
+    seats |> Enum.max()
   end
 
   defp parse_seats(seats) do
-    seats |> IO.inspect(label: "Seats")
-    count = for seat <- seats do
+    # seats |> IO.inspect(label: "Seats")
+    for seat <- seats do
       {row, column} = seat |> parse_seat
 
-      row |> IO.inspect(label: "Row")
-      column |> IO.inspect(label: "Column")
+      # row |> IO.inspect(label: "Row")
+      # column |> IO.inspect(label: "Column")
 
       row * 8 + column
     end
-    count |> Enum.max()
   end
 
   defp parse_seat(seat) do
@@ -55,6 +55,15 @@ defmodule AdventOfCode.Day05 do
     upper
   end
 
-  def part2(_input) do
+  def part2(input) do
+    seats = input |> parse_seats |> Enum.sort()
+    min = seats |> List.first()
+    # min |> IO.inspect(label: "Min")
+    max = seats |> Enum.max()
+    # max |> IO.inspect(label: "Max")
+    all_values = Enum.to_list(min..max)
+    # all_values |> IO.inspect(label: "Values")
+    [check] = MapSet.difference(MapSet.new(all_values), MapSet.new(seats)) |> MapSet.to_list()
+    check
   end
 end
