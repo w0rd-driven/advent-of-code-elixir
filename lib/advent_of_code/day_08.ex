@@ -37,6 +37,37 @@ defmodule AdventOfCode.Day08 do
     end
   end
 
-  def part2(_input) do
+  def part2(input) do
+    instructions = for instruction <- input do
+      instruction |> parse_instruction()
+    end
+    # instructions |> IO.inspect(label: "Instructions")
+
+    modifiable = instructions
+    |> Enum.with_index()
+    |> Enum.reduce([], fn
+      {[x, _], index}, acc when x in ~w(jmp nop) -> [index | acc]
+      {_, _}, acc -> acc
+    end)
+
+    # modifiable |> IO.inspect(label: "Modifiable")
+
+    {_, acc, _} = brute_force(modifiable, instructions)
+    acc
+  end
+
+  def brute_force([value | tail], input) do
+    # input |> IO.inspect(label: "Brute")
+
+    modified =
+      List.update_at(input, value, fn
+        ["jmp", value] -> ["nop", value]
+        ["nop", value] -> ["jmp", value]
+      end)
+
+    case run_program(modified, {0, 0, MapSet.new()}) do
+      {:loop, _} -> brute_force(tail, input)
+      {:end, result} -> result
+    end
   end
 end
