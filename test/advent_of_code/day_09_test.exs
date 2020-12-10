@@ -11,10 +11,9 @@ defmodule AdventOfCode.Day09Test do
 
   @tag :skip
   test "part2" do
-    input = nil
-    result = part2(input)
+    input = get_input()
 
-    assert result
+    assert 62 = part1(input, 5)
   end
 
   def get_input do
