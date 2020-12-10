@@ -1,17 +1,23 @@
 defmodule AdventOfCode.Day09 do
   def part1(input, preamble_length \\ 25) do
-    { preamble, message } = input |> Enum.split(preamble_length)
-    preamble |> IO.inspect(label: "Preamble")
-    message |> IO.inspect(label: "Message")
-    valid = for total <- message do
-      total |> IO.inspect(label: "Total")
-      for number_1 <- preamble, number_2 <- preamble, number_1 + number_2 == total do
-        number_1 |> IO.inspect(label: "1")
-        number_2 |> IO.inspect(label: "2")
-        total
-      end
-    end
-    # valid |> IO.inspect(label: "Valid")
+    input
+    |> Stream.chunk_every(preamble_length + 1, 1)
+    |> Enum.find_value(fn list ->
+      {total, preamble} = List.pop_at(list, -1)
+      # list |> Enum.to_list() |> IO.inspect(label: "List")
+      # total |> IO.inspect(label: "Total")
+      # preamble |> IO.inspect(label: "Preamble")
+
+      combinations =
+        for number_1 <- preamble, number_2 <- preamble, uniq: true do
+          [number_1, number_2] |> Enum.sort() |> List.to_tuple()
+        end
+
+      # combinations |> IO.inspect(label: "Combinations")
+      valid? = Enum.any?(combinations, fn {number_1, number_2} -> number_1 + number_2 == total end)
+
+      unless valid?, do: total
+    end)
   end
 
   def part2(_input) do
