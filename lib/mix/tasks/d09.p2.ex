@@ -20,6 +20,7 @@ defmodule Mix.Tasks.D09.P2 do
     |> Path.expand(__DIR__)
     |> File.stream!()
     |> Stream.map(&String.trim_trailing/1)
+    |> Stream.map(&String.to_integer/1)
     |> Enum.to_list()
   end
 end
