@@ -33,8 +33,8 @@ defmodule AdventOfCode.Day06 do
     else
       characters = group |> Enum.join() |> character_count()
       # characters |> IO.inspect(label: "Characters")
-      _count = characters |> Enum.reduce(0, fn {_char, count}, acc ->
-        if count == passengers, do: acc + 1, else: acc
+      _count = characters |> Enum.count(fn {_char, count} ->
+        count == passengers
       end)
       # count |> IO.inspect(label: "Count")
     end
