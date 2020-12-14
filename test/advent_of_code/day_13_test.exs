@@ -3,12 +3,10 @@ defmodule AdventOfCode.Day13Test do
 
   import AdventOfCode.Day13
 
-  @tag :skip
   test "part1" do
-    input = nil
-    result = part1(input)
+    input = get_input()
 
-    assert result
+    assert 295 = part1(input)
   end
 
   @tag :skip
@@ -17,5 +15,12 @@ defmodule AdventOfCode.Day13Test do
     result = part2(input)
 
     assert result
+  end
+
+  def get_input do
+    "../../lib/data/day_13_test.txt" # Eww but I don't care right now
+    |> Path.expand(__DIR__)
+    |> File.stream!()
+    |> Stream.map(&String.trim_trailing/1)
   end
 end
